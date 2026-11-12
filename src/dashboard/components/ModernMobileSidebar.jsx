@@ -1,11 +1,32 @@
 import { useState } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
-// eslint-disable-next-line no-unused-vars
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import {
+  FaCompass,
+  FaBriefcase,
+  FaUsers,
+  FaDraftingCompass,
+  FaEnvelopeOpenText,
+  FaCoins,
+  FaCreditCard,
+  FaFileInvoiceDollar,
+  FaChartLine,
+  FaComments,
+  FaEnvelope,
+  FaBell,
+  FaCog,
+  FaUserTie,
+  FaShieldAlt,
+  FaArrowLeft,
+  FaChevronDown,
+  FaSignOutAlt,
+  FaTimes,
+} from 'react-icons/fa';
 import authService from '../services/authService';
 
 export default function ModernMobileSidebar({ isOpen, onClose }) {
   const navigate = useNavigate();
+  const location = useLocation();
   const [activeSubmenu, setActiveSubmenu] = useState(null);
 
   const logout = () => {
@@ -14,59 +35,56 @@ export default function ModernMobileSidebar({ isOpen, onClose }) {
     onClose();
   };
 
-  // Menu items avec icônes et sous-menus
+  // Menu items harmonisés avec l'agence d'architecture
   const menuItems = [
     {
       id: 'dashboard',
       label: 'Tableau de Bord',
       path: '/dashboard',
-      icon: '📊',
-      color: 'from-blue-500 to-blue-600',
-      description: "Vue d'ensemble",
+      icon: FaCompass,
+      description: "Vue d'ensemble de l'agence",
     },
     {
       id: 'business',
-      label: 'Business',
-      icon: '💼',
-      color: 'from-purple-500 to-purple-600',
+      label: 'Agence & Études',
+      icon: FaBriefcase,
       submenu: [
         {
           label: 'Clients',
           path: '/dashboard/clients',
-          icon: '👥',
-          desc: 'Gestion clients',
+          icon: FaUsers,
+          desc: "Maîtres d'ouvrage",
         },
         {
           label: 'Projets',
           path: '/dashboard/projects',
-          icon: '📋',
-          desc: 'Suivi projets',
+          icon: FaDraftingCompass,
+          desc: 'Suivi études & chantiers',
         },
         {
           label: 'Abonnés',
           path: '/dashboard/subscribers',
-          icon: '📧',
-          desc: 'Newsletter',
+          icon: FaEnvelopeOpenText,
+          desc: 'Contacts & Presse',
         },
       ],
     },
     {
       id: 'finances',
-      label: 'Finances',
-      icon: '💰',
-      color: 'from-green-500 to-green-600',
+      label: 'Honoraires',
+      icon: FaCoins,
       submenu: [
         {
           label: 'Paiements',
           path: '/dashboard/payments',
-          icon: '💳',
-          desc: 'Transactions',
+          icon: FaCreditCard,
+          desc: 'Règlements & acomptes',
         },
         {
           label: 'Factures',
           path: '/dashboard/invoices',
-          icon: '📄',
-          desc: 'Facturation',
+          icon: FaFileInvoiceDollar,
+          desc: 'Notes d’honoraires',
         },
       ],
     },
@@ -74,47 +92,44 @@ export default function ModernMobileSidebar({ isOpen, onClose }) {
       id: 'analytics',
       label: 'Analytics',
       path: '/dashboard/analytics',
-      icon: '📈',
-      color: 'from-orange-500 to-orange-600',
-      description: 'Statistiques',
+      icon: FaChartLine,
+      description: 'Indicateurs temps réel',
     },
     {
       id: 'communication',
       label: 'Communication',
-      icon: '💬',
-      color: 'from-pink-500 to-pink-600',
+      icon: FaComments,
       submenu: [
         {
           label: 'Messages',
           path: '/dashboard/messaging',
-          icon: '💌',
-          desc: 'Contacts',
+          icon: FaEnvelope,
+          desc: 'Demandes & échanges',
         },
         {
           label: 'Notifications',
           path: '/dashboard/notifications',
-          icon: '🔔',
-          desc: 'Alertes',
+          icon: FaBell,
+          desc: 'Alertes système',
         },
       ],
     },
     {
       id: 'settings',
       label: 'Paramètres',
-      icon: '⚙️',
-      color: 'from-gray-500 to-gray-600',
+      icon: FaCog,
       submenu: [
         {
           label: 'Mon Profil',
           path: '/dashboard/profile',
-          icon: '👤',
-          desc: 'Profil admin',
+          icon: FaUserTie,
+          desc: 'Architecte principal',
         },
         {
           label: 'Sécurité',
           path: '/dashboard/security',
-          icon: '🔒',
-          desc: 'Sécurité',
+          icon: FaShieldAlt,
+          desc: 'Accès & protection',
         },
       ],
     },
@@ -131,23 +146,14 @@ export default function ModernMobileSidebar({ isOpen, onClose }) {
     onClose();
   };
 
-  // Animations
   const sidebarVariants = {
     closed: {
       x: '-100%',
-      transition: {
-        type: 'spring',
-        stiffness: 400,
-        damping: 40,
-      },
+      transition: { type: 'tween', duration: 0.35, ease: [0.22, 1, 0.36, 1] },
     },
     open: {
       x: 0,
-      transition: {
-        type: 'spring',
-        stiffness: 400,
-        damping: 40,
-      },
+      transition: { type: 'tween', duration: 0.35, ease: [0.22, 1, 0.36, 1] },
     },
   };
 
@@ -157,11 +163,11 @@ export default function ModernMobileSidebar({ isOpen, onClose }) {
   };
 
   const itemVariants = {
-    closed: { x: -20, opacity: 0 },
+    closed: { x: -16, opacity: 0 },
     open: (i) => ({
       x: 0,
       opacity: 1,
-      transition: { delay: i * 0.1 },
+      transition: { delay: i * 0.05, duration: 0.25 },
     }),
   };
 
@@ -169,201 +175,198 @@ export default function ModernMobileSidebar({ isOpen, onClose }) {
     <AnimatePresence>
       {isOpen && (
         <>
-          {/* Overlay */}
+          {/* Overlay sombre */}
           <motion.div
             variants={overlayVariants}
             initial="closed"
             animate="open"
             exit="closed"
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] lg:hidden"
+            className="fixed inset-0 bg-black/75 backdrop-blur-xs z-[100] lg:hidden"
             onClick={onClose}
           />
 
-          {/* Sidebar */}
+          {/* Panneau latéral mobile */}
           <motion.aside
             variants={sidebarVariants}
             initial="closed"
             animate="open"
             exit="closed"
-            className="fixed left-0 top-0 h-full w-80 bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 z-[110] lg:hidden overflow-hidden"
+            className="fixed left-0 top-0 h-full w-4/5 max-w-[320px] bg-slate-900 border-r border-slate-800 border-t-4 border-t-amber-600 z-[110] lg:hidden flex flex-col justify-between overflow-hidden shadow-2xl"
           >
-            {/* Header */}
-            <div className="relative p-6 bg-gradient-to-r from-blue-600 to-purple-600">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-3">
-                  <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
-                    <span className="text-2xl font-bold text-white">IR</span>
-                  </div>
-                  <div>
-                    <h2 className="text-white font-bold text-lg">Ir Bendelo</h2>
-                    <p className="text-blue-100 text-sm">Admin Dashboard</p>
-                  </div>
+            {/* En-tête de l'agence */}
+            <div className="p-6 bg-slate-950 border-b border-slate-800/80 flex items-center justify-between">
+              <div className="flex items-center gap-3.5">
+                <div className="w-11 h-11 border border-amber-600/60 bg-slate-900 flex items-center justify-center flex-shrink-0">
+                  <span className="text-base font-serif font-bold text-amber-500 tracking-wider">
+                    IM
+                  </span>
                 </div>
-
-                <button
-                  onClick={onClose}
-                  className="p-2 text-white/80 hover:text-white hover:bg-white/20 rounded-lg transition-all duration-200"
-                >
-                  <svg
-                    className="w-6 h-6"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M6 18L18 6M6 6l12 12"
-                    />
-                  </svg>
-                </button>
-              </div>
-
-              {/* Decorative elements */}
-              <div className="absolute -right-8 -top-8 w-32 h-32 bg-white/10 rounded-full"></div>
-              <div className="absolute -right-4 -bottom-4 w-24 h-24 bg-white/5 rounded-full"></div>
-            </div>
-
-            {/* Navigation */}
-            <div className="flex-1 overflow-y-auto py-4 px-3">
-              {/* Retour site principal */}
-              <motion.a
-                href="/"
-                initial={{ x: -20, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                transition={{ delay: 0.1 }}
-                className="flex items-center p-3 mb-4 text-white bg-gradient-to-r from-emerald-600 to-emerald-700 rounded-xl hover:from-emerald-500 hover:to-emerald-600 transition-all duration-200 transform hover:scale-105 shadow-lg"
-              >
-                <span className="text-xl mr-3">🏠</span>
                 <div>
-                  <div className="font-semibold">Site Principal</div>
-                  <div className="text-emerald-100 text-xs">Retour au site</div>
+                  <span className="text-[9px] tracking-[0.3em] uppercase text-amber-500 font-bold block">
+                    APA IBRAMUS
+                  </span>
+                  <h2 className="text-white font-serif font-bold text-lg tracking-wide leading-tight">
+                    Direction
+                  </h2>
                 </div>
-              </motion.a>
+              </div>
 
-              {/* Menu Items */}
-              <div className="space-y-2">
-                {menuItems.map((item, index) => (
-                  <motion.div
-                    key={item.id}
-                    custom={index}
-                    variants={itemVariants}
-                    initial="closed"
-                    animate="open"
-                  >
-                    {/* Menu item principal */}
-                    <div
-                      className={`group relative overflow-hidden rounded-xl transition-all duration-300 ${
-                        item.submenu ? 'cursor-pointer' : ''
-                      }`}
-                      onClick={() =>
-                        item.submenu
-                          ? handleSubmenuToggle(item.id)
-                          : handleNavClick(item.path)
-                      }
-                    >
-                      <div
-                        className={`absolute inset-0 bg-gradient-to-r ${item.color} opacity-0 group-hover:opacity-100 transition-opacity duration-300`}
-                      ></div>
+              <button
+                type="button"
+                onClick={onClose}
+                aria-label="Fermer le menu"
+                className="p-2.5 bg-slate-900 border border-slate-800 text-slate-400 hover:border-amber-600 hover:text-amber-500 transition-colors cursor-pointer"
+              >
+                <FaTimes size={15} />
+              </button>
+            </div>
 
-                      <div className="relative p-3 bg-slate-800/50 group-hover:bg-transparent border border-slate-700/50 group-hover:border-transparent transition-all duration-300">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center space-x-3">
-                            <span className="text-2xl group-hover:scale-110 transition-transform duration-200">
-                              {item.icon}
-                            </span>
-                            <div>
-                              <div className="text-white font-medium group-hover:text-white">
-                                {item.label}
-                              </div>
-                              {item.description && (
-                                <div className="text-slate-400 text-xs group-hover:text-white/80">
-                                  {item.description}
-                                </div>
-                              )}
-                            </div>
-                          </div>
-
-                          {item.submenu && (
-                            <motion.div
-                              animate={{
-                                rotate: activeSubmenu === item.id ? 180 : 0,
-                              }}
-                              transition={{ duration: 0.2 }}
-                              className="text-slate-400 group-hover:text-white"
-                            >
-                              <svg
-                                className="w-5 h-5"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth={2}
-                                  d="M19 9l-7 7-7-7"
-                                />
-                              </svg>
-                            </motion.div>
-                          )}
-                        </div>
-                      </div>
+            {/* Zone de navigation défilante */}
+            <div className="flex-1 overflow-y-auto py-5 px-4 space-y-4">
+              {/* Retour site vitrine */}
+              <Link
+                to="/"
+                onClick={onClose}
+                className="flex items-center justify-between p-3.5 bg-slate-950 border border-slate-800 hover:border-amber-600 text-slate-200 hover:text-amber-500 transition-all duration-300"
+              >
+                <div className="flex items-center gap-3">
+                  <FaArrowLeft size={12} className="text-amber-500" />
+                  <div>
+                    <div className="text-xs uppercase tracking-[0.2em] font-bold">
+                      Site Vitrine
                     </div>
+                    <div className="text-[10px] text-slate-500">
+                      Retour à l'accueil public
+                    </div>
+                  </div>
+                </div>
+              </Link>
 
-                    {/* Submenu */}
-                    <AnimatePresence>
-                      {item.submenu && activeSubmenu === item.id && (
-                        <motion.div
-                          initial={{ height: 0, opacity: 0 }}
-                          animate={{ height: 'auto', opacity: 1 }}
-                          exit={{ height: 0, opacity: 0 }}
-                          transition={{ duration: 0.3 }}
-                          className="overflow-hidden ml-4 mt-2 space-y-1"
-                        >
-                          {item.submenu.map((subItem, subIndex) => (
-                            <NavLink
-                              key={subIndex}
-                              to={subItem.path}
-                              onClick={() => handleNavClick(subItem.path)}
-                              className={({ isActive }) =>
-                                `flex items-center p-3 rounded-lg transition-all duration-200 transform hover:scale-105 ${
-                                  isActive
-                                    ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg'
-                                    : 'bg-slate-800/30 text-slate-300 hover:bg-slate-700/50 hover:text-white'
-                                }`
-                              }
-                            >
-                              <span className="text-lg mr-3">
-                                {subItem.icon}
-                              </span>
-                              <div>
-                                <div className="font-medium">
-                                  {subItem.label}
-                                </div>
-                                <div className="text-xs opacity-75">
-                                  {subItem.desc}
-                                </div>
+              {/* Liste des rubriques */}
+              <div className="space-y-1.5">
+                {menuItems.map((item, index) => {
+                  const IconComponent = item.icon;
+                  const hasSubmenu = Boolean(item.submenu);
+                  const isSubmenuOpen = activeSubmenu === item.id;
+                  const isDirectActive =
+                    !hasSubmenu && location.pathname === item.path;
+
+                  return (
+                    <motion.div
+                      key={item.id}
+                      custom={index}
+                      variants={itemVariants}
+                      initial="closed"
+                      animate="open"
+                    >
+                      {/* Élément principal */}
+                      <button
+                        type="button"
+                        onClick={() =>
+                          hasSubmenu
+                            ? handleSubmenuToggle(item.id)
+                            : handleNavClick(item.path)
+                        }
+                        className={`w-full text-left p-3.5 border-l-2 transition-all duration-300 flex items-center justify-between cursor-pointer ${
+                          isDirectActive
+                            ? 'bg-slate-950 border-amber-500 text-amber-500'
+                            : isSubmenuOpen
+                            ? 'bg-slate-950/80 border-amber-600/60 text-white'
+                            : 'bg-slate-950/40 border-transparent text-slate-300 hover:bg-slate-950 hover:text-white'
+                        }`}
+                      >
+                        <div className="flex items-center gap-3.5">
+                          <IconComponent
+                            size={15}
+                            className="text-amber-500 flex-shrink-0"
+                          />
+                          <div>
+                            <div className="text-xs uppercase tracking-[0.18em] font-bold">
+                              {item.label}
+                            </div>
+                            {item.description && (
+                              <div className="text-[10px] text-slate-500 mt-0.5">
+                                {item.description}
                               </div>
-                            </NavLink>
-                          ))}
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </motion.div>
-                ))}
+                            )}
+                          </div>
+                        </div>
+
+                        {hasSubmenu && (
+                          <FaChevronDown
+                            size={10}
+                            className={`text-slate-500 transition-transform duration-300 ${
+                              isSubmenuOpen ? 'rotate-180 text-amber-500' : ''
+                            }`}
+                          />
+                        )}
+                      </button>
+
+                      {/* Sous-menu accordéon */}
+                      <AnimatePresence>
+                        {hasSubmenu && isSubmenuOpen && (
+                          <motion.div
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: 'auto' }}
+                            exit={{ opacity: 0, height: 0 }}
+                            transition={{ duration: 0.25 }}
+                            className="overflow-hidden pl-4 ml-4 border-l border-slate-800 space-y-1 mt-1 mb-2"
+                          >
+                            {item.submenu.map((sub) => {
+                              const SubIcon = sub.icon;
+                              const isSubActive =
+                                location.pathname === sub.path;
+
+                              return (
+                                <button
+                                  key={sub.path}
+                                  type="button"
+                                  onClick={() => handleNavClick(sub.path)}
+                                  className={`w-full text-left px-3 py-2.5 transition-colors flex items-center gap-3 cursor-pointer ${
+                                    isSubActive
+                                      ? 'bg-slate-950 text-amber-500 font-bold'
+                                      : 'text-slate-400 hover:text-white hover:bg-slate-950/50'
+                                  }`}
+                                >
+                                  <SubIcon
+                                    size={12}
+                                    className={
+                                      isSubActive
+                                        ? 'text-amber-500'
+                                        : 'text-slate-500'
+                                    }
+                                  />
+                                  <div>
+                                    <div className="text-[11px] uppercase tracking-[0.15em]">
+                                      {sub.label}
+                                    </div>
+                                    {sub.desc && (
+                                      <div className="text-[10px] text-slate-500">
+                                        {sub.desc}
+                                      </div>
+                                    )}
+                                  </div>
+                                </button>
+                              );
+                            })}
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </motion.div>
+                  );
+                })}
               </div>
             </div>
 
-            {/* Footer */}
-            <div className="p-4 border-t border-slate-700/50">
+            {/* Pied du menu : Déconnexion */}
+            <div className="p-4 bg-slate-950 border-t border-slate-800/80">
               <button
+                type="button"
                 onClick={logout}
-                className="w-full flex items-center justify-center p-3 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg"
+                className="w-full py-3.5 px-4 text-rose-400 hover:text-white hover:bg-rose-950/60 border border-transparent hover:border-rose-800/60 transition-all duration-300 flex items-center justify-center gap-3 text-xs uppercase tracking-[0.2em] font-bold cursor-pointer"
               >
-                <span className="text-xl mr-2">🚪</span>
-                <span className="font-semibold">Déconnexion</span>
+                <FaSignOutAlt size={14} />
+                <span>Se déconnecter</span>
               </button>
             </div>
           </motion.aside>

@@ -1,5 +1,17 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import {
+  FaUserPlus,
+  FaUser,
+  FaEnvelope,
+  FaKey,
+  FaCheckCircle,
+  FaEye,
+  FaEyeSlash,
+  FaArrowRight,
+  FaArrowLeft,
+  FaExclamationCircle,
+} from 'react-icons/fa';
 import useFormSecurity from '../hooks/useFormSecurity';
 import authService from '../services/authService';
 import { register as apiRegister } from '../services/authApi';
@@ -30,22 +42,17 @@ const SecureRegister = () => {
     try {
       setApiError('');
 
-      // Vérifier que les mots de passe correspondent
       if (data.password !== data.confirmPassword) {
-        setApiError('Les mots de passe ne correspondent pas');
+        setApiError('Les mots de passe ne correspondent pas.');
         return;
       }
 
-      // Appeler le service d'API pour l'inscription
       const resp = await apiRegister({
         name: data.name,
         email: data.email,
-        password: data.password
+        password: data.password,
       });
 
-      // NE PAS rediriger automatiquement vers le dashboard admin.
-      // Les utilisateurs enregistrés obtiennent le rôle 'user' et ne doivent
-      // pas accéder à l'admin. Rediriger vers le profil utilisateur.
       const user = resp?.user || authService.getCurrentUser();
       if (user?.role === 'admin') {
         navigate('/dashboard');
@@ -53,15 +60,13 @@ const SecureRegister = () => {
         navigate('/profile');
       }
     } catch (error) {
-      setApiError(error.userMessage || error.message || 'Erreur lors de l\'inscription');
+      setApiError(error.userMessage || error.message || "Erreur lors de l'inscription.");
     }
   });
 
-  // Handler personnalisé pour afficher la force du mot de passe
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    // Afficher la force du mot de passe en temps réel
     if (name === 'password' && value.length > 0) {
       const strength = authService.validatePasswordStrength(value);
       setPasswordStrength(strength);
@@ -73,282 +78,285 @@ const SecureRegister = () => {
   };
 
   const handleSubmit = (e) => {
-  setApiError('');
-  handleFormSubmit(e);
+    e.preventDefault();
+    setApiError('');
+    handleFormSubmit(e);
   };
 
-  // Fonction pour afficher la couleur de force du mot de passe
-  const getPasswordStrengthColor = (score) => {
-    if (score <= 2) return 'text-red-400';
-    if (score <= 3) return 'text-orange-400';
-    if (score <= 4) return 'text-yellow-400';
-    if (score <= 5) return 'text-lime-400';
-    return 'text-green-400';
+  const getPasswordStrengthStyle = (score) => {
+    if (score <= 2) return { text: 'text-rose-400', bar: 'bg-rose-500 w-1/4' };
+    if (score <= 3) return { text: 'text-orange-400', bar: 'bg-orange-500 w-2/4' };
+    if (score <= 4) return { text: 'text-amber-400', bar: 'bg-amber-500 w-3/4' };
+    return { text: 'text-emerald-400', bar: 'bg-emerald-500 w-full' };
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-dark-200 to-dark-300 px-4">
-      <div className="w-full max-w-md bg-dark-300/80 backdrop-blur-sm p-8 rounded-2xl shadow-2xl border border-gray-700/50">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-12 h-12 bg-gradient-to-r from-purple to-pink rounded-lg mb-4">
-            <span className="text-white text-xl font-bold">✍️</span>
+    <div className="min-h-screen flex items-center justify-center bg-slate-950 px-4 py-16 relative">
+      {/* Retour vers le site */}
+      <button
+        type="button"
+        onClick={() => navigate('/')}
+        className="absolute top-8 left-8 flex items-center gap-2 text-[11px] uppercase tracking-[0.2em] text-slate-400 hover:text-amber-500 transition-colors cursor-pointer"
+      >
+        <FaArrowLeft size={11} />
+        <span>Retour à l'agence</span>
+      </button>
+
+      <div className="w-full max-w-md bg-slate-900/90 backdrop-blur-md p-8 md:p-12 border border-slate-800 border-t-4 border-t-amber-600 shadow-2xl">
+        {/* En-tête éditorial */}
+        <div className="text-center mb-10">
+          <div className="inline-flex items-center justify-center w-12 h-12 border border-amber-600/40 bg-slate-950 text-amber-500 mb-5">
+            <FaUserPlus size={17} />
           </div>
-          <h1 className="text-3xl font-bold text-white mb-2">Créer un compte</h1>
-          <p className="text-gray-400">Rejoignez notre plateforme sécurisée</p>
+          <span className="text-[10px] tracking-[0.35em] uppercase text-amber-500 font-bold block mb-2">
+            APA IBRAMUS — Nouveau Compte
+          </span>
+          <h1 className="text-3xl font-serif font-bold text-white mb-2">
+            Créer un Accès
+          </h1>
+          <div className="w-10 h-px bg-amber-600 mx-auto my-4"></div>
+          <p className="text-xs text-slate-400 tracking-wide">
+            Rejoignez le portail client pour suivre vos études architecturales
+          </p>
         </div>
 
-        {/* API Error */}
+        {/* Erreur API */}
         {apiError && (
-          <div className="mb-6 p-4 bg-red-500/10 border border-red-500/30 rounded-lg">
-            <p className="text-red-300 text-sm">🚨 {apiError}</p>
+          <div className="mb-6 p-4 bg-rose-950/50 border-l-2 border-rose-500 flex items-center gap-3">
+            <FaExclamationCircle className="text-rose-400 flex-shrink-0" size={15} />
+            <p className="text-rose-200 text-xs">{apiError}</p>
           </div>
         )}
 
-        {/* Form */}
+        {/* Formulaire */}
         <form onSubmit={handleSubmit} noValidate className="space-y-5">
-          {/* Name Field */}
-          <div>
-            <label htmlFor="name" className="block text-sm font-medium text-gray-300 mb-2">
-              Nom complet
+          {/* Nom complet */}
+          <div className="group">
+            <label
+              htmlFor="name"
+              className="block text-[11px] uppercase tracking-[0.2em] font-bold text-slate-300 mb-2"
+            >
+              Nom complet <span className="text-amber-500">*</span>
             </label>
-            <div className="relative">
+            <div className="relative flex items-center">
+              <span
+                className={`absolute left-4 transition-colors duration-300 ${
+                  touched.name && errors.name
+                    ? 'text-rose-400'
+                    : 'text-slate-500 group-focus-within:text-amber-500'
+                }`}
+              >
+                <FaUser size={13} />
+              </span>
               <input
                 id="name"
                 name="name"
                 type="text"
-                placeholder="Thielcy Bendelo"
+                placeholder="Jean Dupont"
                 value={formData.name || ''}
                 onChange={handleChange}
                 onBlur={handleBlur}
                 disabled={isLoading}
-                className={`w-full px-4 py-3 bg-dark-100/50 border rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 transition-all ${
+                className={`w-full pl-11 pr-4 py-3.5 bg-slate-950 border text-sm text-white placeholder-slate-600 focus:outline-none transition-all duration-300 ${
                   touched.name && errors.name
-                    ? 'border-red-500 focus:ring-red-500/50'
-                    : 'border-gray-600/50 focus:ring-purple/50 focus:border-purple/50'
+                    ? 'border-rose-500 focus:border-rose-500'
+                    : 'border-slate-800 focus:border-amber-600'
                 } disabled:opacity-50`}
               />
-              <span className="absolute right-3 top-3 text-gray-500">👤</span>
             </div>
             {touched.name && errors.name && (
-              <p className="text-red-400 text-xs mt-1">⚠️ {errors.name}</p>
+              <p className="flex items-center gap-1.5 text-rose-400 text-xs mt-2">
+                <FaExclamationCircle size={11} />
+                <span>{errors.name}</span>
+              </p>
             )}
           </div>
 
-          {/* Email Field */}
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">
-              Email
+          {/* Email */}
+          <div className="group">
+            <label
+              htmlFor="email"
+              className="block text-[11px] uppercase tracking-[0.2em] font-bold text-slate-300 mb-2"
+            >
+              Adresse Email <span className="text-amber-500">*</span>
             </label>
-            <div className="relative">
+            <div className="relative flex items-center">
+              <span
+                className={`absolute left-4 transition-colors duration-300 ${
+                  touched.email && errors.email
+                    ? 'text-rose-400'
+                    : 'text-slate-500 group-focus-within:text-amber-500'
+                }`}
+              >
+                <FaEnvelope size={13} />
+              </span>
               <input
                 id="email"
                 name="email"
                 type="email"
-                placeholder="bendelothielcy@gmail.com"
+                placeholder="client@domaine.com"
                 value={formData.email || ''}
                 onChange={handleChange}
                 onBlur={handleBlur}
                 disabled={isLoading}
-                className={`w-full px-4 py-3 bg-dark-100/50 border rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 transition-all ${
+                className={`w-full pl-11 pr-4 py-3.5 bg-slate-950 border text-sm text-white placeholder-slate-600 focus:outline-none transition-all duration-300 ${
                   touched.email && errors.email
-                    ? 'border-red-500 focus:ring-red-500/50'
-                    : 'border-gray-600/50 focus:ring-purple/50 focus:border-purple/50'
+                    ? 'border-rose-500 focus:border-rose-500'
+                    : 'border-slate-800 focus:border-amber-600'
                 } disabled:opacity-50`}
               />
-              <span className="absolute right-3 top-3 text-gray-500">✉️</span>
             </div>
             {touched.email && errors.email && (
-              <p className="text-red-400 text-xs mt-1">⚠️ {errors.email}</p>
+              <p className="flex items-center gap-1.5 text-rose-400 text-xs mt-2">
+                <FaExclamationCircle size={11} />
+                <span>{errors.email}</span>
+              </p>
             )}
           </div>
 
-          {/* Password Field */}
-          <div>
+          {/* Mot de passe */}
+          <div className="group">
             <div className="flex items-center justify-between mb-2">
-              <label htmlFor="password" className="block text-sm font-medium text-gray-300">
-                Mot de passe
+              <label
+                htmlFor="password"
+                className="block text-[11px] uppercase tracking-[0.2em] font-bold text-slate-300"
+              >
+                Mot de passe <span className="text-amber-500">*</span>
               </label>
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="text-xs text-purple hover:text-pink transition"
+                className="flex items-center gap-1.5 text-[11px] uppercase tracking-wider text-slate-400 hover:text-amber-500 transition-colors cursor-pointer"
               >
-                {showPassword ? '👁️ Masquer' : '👁️ Afficher'}
+                {showPassword ? <FaEyeSlash size={12} /> : <FaEye size={12} />}
+                <span>{showPassword ? 'Masquer' : 'Afficher'}</span>
               </button>
             </div>
-            <div className="relative">
+            <div className="relative flex items-center">
+              <span
+                className={`absolute left-4 transition-colors duration-300 ${
+                  touched.password && errors.password
+                    ? 'text-rose-400'
+                    : 'text-slate-500 group-focus-within:text-amber-500'
+                }`}
+              >
+                <FaKey size={13} />
+              </span>
               <input
                 id="password"
                 name="password"
                 type={showPassword ? 'text' : 'password'}
-                placeholder="bendelo1996$$$$$"
+                placeholder="••••••••••••"
                 value={formData.password || ''}
                 onChange={handleChange}
                 onBlur={handleBlur}
                 disabled={isLoading}
-                className={`w-full px-4 py-3 bg-dark-100/50 border rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 transition-all ${
+                className={`w-full pl-11 pr-4 py-3.5 bg-slate-950 border text-sm text-white placeholder-slate-600 focus:outline-none transition-all duration-300 ${
                   touched.password && errors.password
-                    ? 'border-red-500 focus:ring-red-500/50'
-                    : 'border-gray-600/50 focus:ring-purple/50 focus:border-purple/50'
-                } disabled:opacity-50`}
+                    ? 'border-rose-500 focus:border-rose-500'
+                    : 'border-slate-800 focus:border-amber-600'
+                }`}
               />
-              <span className="absolute right-3 top-3 text-gray-500">🔒</span>
             </div>
 
-            {/* Password Strength Indicator */}
+            {/* Indicateur de force du mot de passe */}
             {passwordStrength && (
-              <div className="mt-2">
-                <div className="flex items-center justify-between mb-1">
-                  <span className="text-xs text-gray-400">Force du mot de passe:</span>
-                  <span className={`text-xs font-semibold ${getPasswordStrengthColor(passwordStrength.score)}`}>
-                    {passwordStrength.strength} ({passwordStrength.score}/{passwordStrength.maxScore})
+              <div className="mt-2.5">
+                <div className="flex items-center justify-between mb-1.5">
+                  <span className="text-[10px] uppercase tracking-wider text-slate-500">
+                    Sécurité du mot de passe
+                  </span>
+                  <span className={`text-[10px] uppercase tracking-wider font-bold ${getPasswordStrengthStyle(passwordStrength.score).text}`}>
+                    {passwordStrength.label || `Niveau ${passwordStrength.score}/6`}
                   </span>
                 </div>
-                <div className="w-full bg-gray-700 rounded-full h-1.5">
-                  <div
-                    className={`h-1.5 rounded-full transition-all ${
-                      passwordStrength.score <= 2
-                        ? 'bg-red-500 w-1/6'
-                        : passwordStrength.score <= 3
-                        ? 'bg-orange-500 w-1/3'
-                        : passwordStrength.score <= 4
-                        ? 'bg-yellow-500 w-1/2'
-                        : passwordStrength.score <= 5
-                        ? 'bg-lime-500 w-2/3'
-                        : 'bg-green-500 w-full'
-                    }`}
-                  />
-                </div>
-
-                {/* Checklist de sécurité */}
-                <div className="mt-2 space-y-1 text-xs">
-                  <div className={passwordStrength.checks.length ? 'text-green-400' : 'text-gray-400'}>
-                    {passwordStrength.checks.length ? '✓' : '○'} Au moins 8 caractères
-                  </div>
-                  <div className={passwordStrength.checks.uppercase ? 'text-green-400' : 'text-gray-400'}>
-                    {passwordStrength.checks.uppercase ? '✓' : '○'} Majuscule (A-Z)
-                  </div>
-                  <div className={passwordStrength.checks.lowercase ? 'text-green-400' : 'text-gray-400'}>
-                    {passwordStrength.checks.lowercase ? '✓' : '○'} Minuscule (a-z)
-                  </div>
-                  <div className={passwordStrength.checks.numbers ? 'text-green-400' : 'text-gray-400'}>
-                    {passwordStrength.checks.numbers ? '✓' : '○'} Chiffre (0-9)
-                  </div>
-                  <div className={passwordStrength.checks.special ? 'text-green-400' : 'text-gray-400'}>
-                    {passwordStrength.checks.special ? '✓' : '○'} Caractère spécial (!@#$%^&*)
-                  </div>
+                <div className="w-full h-1 bg-slate-800 overflow-hidden">
+                  <div className={`h-full transition-all duration-300 ${getPasswordStrengthStyle(passwordStrength.score).bar}`} />
                 </div>
               </div>
             )}
 
             {touched.password && errors.password && (
-              <p className="text-red-400 text-xs mt-1">⚠️ {errors.password}</p>
+              <p className="flex items-center gap-1.5 text-rose-400 text-xs mt-2">
+                <FaExclamationCircle size={11} />
+                <span>{errors.password}</span>
+              </p>
             )}
           </div>
 
-          {/* Confirm Password Field */}
-          <div>
+          {/* Confirmation du mot de passe */}
+          <div className="group">
             <div className="flex items-center justify-between mb-2">
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-300">
-                Confirmer le mot de passe
+              <label
+                htmlFor="confirmPassword"
+                className="block text-[11px] uppercase tracking-[0.2em] font-bold text-slate-300"
+              >
+                Confirmer le mot de passe <span className="text-amber-500">*</span>
               </label>
               <button
                 type="button"
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className="text-xs text-purple hover:text-pink transition"
+                className="flex items-center gap-1.5 text-[11px] uppercase tracking-wider text-slate-400 hover:text-amber-500 transition-colors cursor-pointer"
               >
-                {showConfirmPassword ? '👁️ Masquer' : '👁️ Afficher'}
+                {showConfirmPassword ? <FaEyeSlash size={12} /> : <FaEye size={12} />}
+                <span>{showConfirmPassword ? 'Masquer' : 'Afficher'}</span>
               </button>
             </div>
-            <div className="relative">
+            <div className="relative flex items-center">
+              <span
+                className={`absolute left-4 transition-colors duration-300 ${
+                  touched.confirmPassword && errors.confirmPassword
+                    ? 'text-rose-400'
+                    : 'text-slate-500 group-focus-within:text-amber-500'
+                }`}
+              >
+                <FaCheckCircle size={13} />
+              </span>
               <input
                 id="confirmPassword"
                 name="confirmPassword"
                 type={showConfirmPassword ? 'text' : 'password'}
-                placeholder="Confirmez votre mot de passe"
+                placeholder="••••••••••••"
                 value={formData.confirmPassword || ''}
                 onChange={handleChange}
                 onBlur={handleBlur}
                 disabled={isLoading}
-                className={`w-full px-4 py-3 bg-dark-100/50 border rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 transition-all ${
+                className={`w-full pl-11 pr-4 py-3.5 bg-slate-950 border text-sm text-white placeholder-slate-600 focus:outline-none transition-all duration-300 ${
                   touched.confirmPassword && errors.confirmPassword
-                    ? 'border-red-500 focus:ring-red-500/50'
-                    : 'border-gray-600/50 focus:ring-purple/50 focus:border-purple/50'
+                    ? 'border-rose-500 focus:border-rose-500'
+                    : 'border-slate-800 focus:border-amber-600'
                 } disabled:opacity-50`}
               />
-              <span className="absolute right-3 top-3 text-gray-500">🔒</span>
             </div>
-
-            {/* Vérifier la correspondance */}
-            {formData.confirmPassword && formData.password && (
-              <div className={`text-xs mt-1 ${formData.password === formData.confirmPassword ? 'text-green-400' : 'text-red-400'}`}>
-                {formData.password === formData.confirmPassword ? '✓ Les mots de passe correspondent' : '✗ Les mots de passe ne correspondent pas'}
-              </div>
-            )}
-
             {touched.confirmPassword && errors.confirmPassword && (
-              <p className="text-red-400 text-xs mt-1">⚠️ {errors.confirmPassword}</p>
+              <p className="flex items-center gap-1.5 text-rose-400 text-xs mt-2">
+                <FaExclamationCircle size={11} />
+                <span>{errors.confirmPassword}</span>
+              </p>
             )}
           </div>
 
-          {/* Terms & Conditions */}
-          <div className="flex items-start gap-3 p-3 bg-blue-500/10 border border-blue-500/30 rounded-lg">
-            <input
-              type="checkbox"
-              id="terms"
-              className="w-4 h-4 mt-1 rounded border-gray-600 text-purple focus:ring-purple"
-              required
-            />
-            <label htmlFor="terms" className="text-xs text-gray-300">
-              Je reconnais avoir lu et accepté les{' '}
-              <button type="button" className="text-purple hover:text-pink transition">
-                conditions d'utilisation
-              </button>
-            </label>
+          {/* Bouton de soumission */}
+          <div className="pt-2">
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="w-full py-4 px-6 bg-amber-600 text-white text-xs uppercase tracking-[0.25em] font-bold hover:bg-amber-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center gap-3 cursor-pointer shadow-lg"
+            >
+              <span>{isLoading ? 'Création du compte...' : 'Finaliser l’inscription'}</span>
+              {!isLoading && <FaArrowRight size={12} />}
+            </button>
           </div>
-
-          {/* Submit Button */}
-          <button
-            type="submit"
-            disabled={isLoading || !formData.name || !formData.email || !formData.password || !formData.confirmPassword}
-            className="w-full py-3 px-4 bg-gradient-to-r from-purple to-pink text-white font-semibold rounded-lg transform transition-all hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/40 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {isLoading ? (
-              <span className="flex items-center justify-center gap-2">
-                <span className="animate-spin">⏳</span> Création du compte...
-              </span>
-            ) : (
-              '✓ Créer un compte'
-            )}
-          </button>
         </form>
 
-        {/* Security Info */}
-        <div className="mt-6 p-4 bg-green-500/10 border border-green-500/30 rounded-lg">
-          <p className="text-green-300 text-xs leading-relaxed">
-            🔐 <strong>Votre compte est protégé par:</strong>
-            <br />
-            • Validation des données côté client
-            <br />
-            • Hashe bcrypt côté serveur
-            <br />
-            • Tokens JWT sécurisés
-            <br />
-            • Rate limiting anti-brute force
-            <br />
-            • Chiffrage SSL/TLS en transmission
-          </p>
-        </div>
-
-        {/* Login Link */}
-        <div className="mt-6 text-center">
-          <p className="text-gray-400 text-sm">
-            Vous avez déjà un compte?{' '}
+        {/* Lien vers la connexion */}
+        <div className="mt-8 pt-6 border-t border-slate-800 text-center">
+          <p className="text-slate-400 text-xs">
+            Vous disposez déjà d'un accès ?{' '}
             <button
               type="button"
               onClick={() => navigate('/login')}
-              className="text-purple hover:text-pink transition font-semibold"
+              className="text-amber-500 hover:text-amber-400 uppercase tracking-wider font-bold ml-1 transition-colors cursor-pointer"
             >
               Se connecter
             </button>

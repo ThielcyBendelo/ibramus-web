@@ -1,7 +1,24 @@
 import { useState, useEffect } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
-// eslint-disable-next-line no-unused-vars
+import { NavLink, Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import {
+  FaCompass,
+  FaBriefcase,
+  FaUsers,
+  FaDraftingCompass,
+  FaEnvelopeOpenText,
+  FaCoins,
+  FaCreditCard,
+  FaFileInvoiceDollar,
+  FaChartLine,
+  FaComments,
+  FaEnvelope,
+  FaBell,
+  FaAngleDoubleLeft,
+  FaChevronDown,
+  FaArrowLeft,
+  FaSignOutAlt,
+} from 'react-icons/fa';
 import authService from '../services/authService';
 
 export default function ModernDesktopSidebar() {
@@ -20,62 +37,56 @@ export default function ModernDesktopSidebar() {
     navigate('/login');
   };
 
-  // Menu items avec icônes et métadonnées
+  // Menu items avec icônes react-icons/fa et métadonnées d'agence
   const menuItems = [
     {
       id: 'dashboard',
       label: 'Dashboard',
       path: '/dashboard',
-      icon: '📊',
-      color: 'from-blue-500 to-blue-600',
-      badge: 'new',
+      icon: FaCompass,
+      badge: 'Actif',
       description: "Vue d'ensemble",
     },
     {
       id: 'business',
-      label: 'Business',
-      icon: '💼',
-      color: 'from-purple-500 to-purple-600',
+      label: 'Agence & Études',
+      icon: FaBriefcase,
       submenu: [
         {
           label: 'Clients',
           path: '/dashboard/clients',
-          icon: '👥',
+          icon: FaUsers,
           count: stats.clients,
-          trend: 'up',
         },
         {
           label: 'Projets',
           path: '/dashboard/projects',
-          icon: '📋',
+          icon: FaDraftingCompass,
           count: stats.projects,
-          trend: 'up',
         },
         {
           label: 'Abonnés',
           path: '/dashboard/subscribers',
-          icon: '📧',
+          icon: FaEnvelopeOpenText,
           count: 45,
-          trend: 'stable',
         },
       ],
     },
     {
       id: 'finances',
-      label: 'Finances',
-      icon: '💰',
-      color: 'from-green-500 to-green-600',
+      label: 'Honoraires',
+      icon: FaCoins,
       submenu: [
         {
           label: 'Paiements',
           path: '/dashboard/payments',
-          icon: '💳',
+          icon: FaCreditCard,
           amount: stats.revenue,
         },
         {
           label: 'Factures',
           path: '/dashboard/invoices',
-          icon: '📄',
+          icon: FaFileInvoiceDollar,
           count: 6,
         },
       ],
@@ -84,28 +95,26 @@ export default function ModernDesktopSidebar() {
       id: 'analytics',
       label: 'Analytics',
       path: '/dashboard/analytics',
-      icon: '📈',
-      color: 'from-orange-500 to-orange-600',
+      icon: FaChartLine,
       badge: stats.growth,
-      description: 'Statistiques temps réel',
+      description: 'Indicateurs temps réel',
     },
     {
       id: 'communication',
       label: 'Communication',
-      icon: '💬',
-      color: 'from-pink-500 to-pink-600',
+      icon: FaComments,
       submenu: [
         {
           label: 'Messages',
           path: '/dashboard/messaging',
-          icon: '💌',
+          icon: FaEnvelope,
           count: 3,
           urgent: true,
         },
         {
           label: 'Notifications',
           path: '/dashboard/notifications',
-          icon: '🔔',
+          icon: FaBell,
           count: 7,
         },
       ],
@@ -115,13 +124,13 @@ export default function ModernDesktopSidebar() {
   const handleSubmenuToggle = (itemId) => {
     if (isCollapsed) {
       setIsCollapsed(false);
-      setTimeout(() => setActiveSubmenu(itemId), 100);
+      setTimeout(() => setActiveSubmenu(itemId), 150);
     } else {
       setActiveSubmenu(activeSubmenu === itemId ? null : itemId);
     }
   };
 
-  // Simuler des données en temps réel
+  // Actualisation simulée des indicateurs
   useEffect(() => {
     const interval = setInterval(() => {
       setStats((prev) => ({
@@ -136,38 +145,43 @@ export default function ModernDesktopSidebar() {
 
   return (
     <motion.aside
-      animate={{ width: isCollapsed ? 80 : 320 }}
-      transition={{ duration: 0.3, ease: 'easeInOut' }}
-      className="hidden lg:flex flex-col h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 border-r border-slate-700/50 relative overflow-hidden"
+      animate={{ width: isCollapsed ? 84 : 300 }}
+      transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+      className="hidden lg:flex flex-col h-screen sticky top-0 bg-slate-900 border-r border-slate-800/80 relative overflow-hidden select-none z-20"
     >
-      {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-5">
-        <div
-          className="absolute inset-0"
-          style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-          }}
-        />
-      </div>
+      {/* Grille architecturale subtile en arrière-plan */}
+      <div
+        className="absolute inset-0 pointer-events-none opacity-[0.03]"
+        style={{
+          backgroundImage: `linear-gradient(to right, #ffffff 1px, transparent 1px), linear-gradient(to bottom, #ffffff 1px, transparent 1px)`,
+          backgroundSize: '32px 32px',
+        }}
+      />
 
-      {/* Header avec Logo */}
-      <div className="relative p-6 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600">
+      {/* En-tête éditorial avec Logo */}
+      <div className="relative p-6 bg-slate-950 border-b border-slate-800/80 border-t-4 border-t-amber-600">
         <div className="flex items-center justify-between">
           <AnimatePresence mode="wait">
             {!isCollapsed ? (
               <motion.div
                 key="expanded"
-                initial={{ opacity: 0, x: -20 }}
+                initial={{ opacity: 0, x: -12 }}
                 animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                className="flex items-center space-x-3"
+                exit={{ opacity: 0, x: -12 }}
+                className="flex items-center gap-3.5"
               >
-                <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-sm shadow-lg">
-                  <span className="text-2xl font-bold text-white">IR</span>
+                <div className="w-11 h-11 border border-amber-600/50 bg-slate-900 flex items-center justify-center flex-shrink-0">
+                  <span className="text-base font-serif font-bold text-amber-500 tracking-wider">
+                    IM
+                  </span>
                 </div>
                 <div>
-                  <h2 className="text-white font-bold text-xl">Ir Bendelo</h2>
-                  <p className="text-blue-100 text-sm">Admin Dashboard Pro</p>
+                  <span className="text-[9px] tracking-[0.3em] uppercase text-amber-500 font-bold block">
+                    APA IBRAMUS
+                  </span>
+                  <h2 className="text-white font-serif font-bold text-lg tracking-wide leading-tight">
+                    Direction
+                  </h2>
                 </div>
               </motion.div>
             ) : (
@@ -176,327 +190,227 @@ export default function ModernDesktopSidebar() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-sm shadow-lg mx-auto"
+                className="w-10 h-10 border border-amber-600/50 bg-slate-900 flex items-center justify-center mx-auto"
               >
-                <span className="text-xl font-bold text-white">IR</span>
+                <span className="text-sm font-serif font-bold text-amber-500">
+                  IM
+                </span>
               </motion.div>
             )}
           </AnimatePresence>
 
-          <motion.button
-            onClick={() => setIsCollapsed(!isCollapsed)}
-            whileTap={{ scale: 0.95 }}
-            className="p-2 text-white/80 hover:text-white hover:bg-white/20 rounded-lg transition-all duration-200"
-          >
-            <motion.svg
-              animate={{ rotate: isCollapsed ? 180 : 0 }}
-              className="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
+          {!isCollapsed && (
+            <button
+              type="button"
+              onClick={() => setIsCollapsed(true)}
+              aria-label="Réduire le menu"
+              className="p-2 text-slate-400 hover:text-amber-500 hover:bg-slate-900 border border-transparent hover:border-slate-800 transition-all cursor-pointer"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M11 19l-7-7 7-7m8 14l-7-7 7-7"
-              />
-            </motion.svg>
-          </motion.button>
+              <FaAngleDoubleLeft size={14} />
+            </button>
+          )}
         </div>
 
-        {/* Stats Quick View */}
+        {/* Bouton d'expansion quand le menu est réduit */}
+        {isCollapsed && (
+          <button
+            type="button"
+            onClick={() => setIsCollapsed(false)}
+            aria-label="Déployer le menu"
+            className="mt-4 w-full py-1.5 flex items-center justify-center text-slate-400 hover:text-amber-500 bg-slate-900 border border-slate-800 transition-colors cursor-pointer"
+          >
+            <FaAngleDoubleLeft size={13} className="rotate-180" />
+          </button>
+        )}
+
+        {/* Aperçu rapide des indicateurs */}
         <AnimatePresence>
           {!isCollapsed && (
             <motion.div
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              className="mt-4 grid grid-cols-2 gap-3"
+              className="mt-5 grid grid-cols-2 gap-3 pt-4 border-t border-slate-800/80"
             >
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3">
-                <div className="text-white/80 text-xs">Revenus</div>
-                <div className="text-white font-bold text-lg">
+              <div className="bg-slate-900/90 border border-slate-800 p-3">
+                <div className="text-[9px] uppercase tracking-[0.2em] text-slate-400">
+                  Honoraires
+                </div>
+                <div className="text-white font-serif font-bold text-base mt-0.5">
                   {stats.revenue}
                 </div>
-                <div className="text-green-300 text-xs">{stats.growth}</div>
+                <div className="text-emerald-400 text-[10px] font-mono mt-0.5">
+                  {stats.growth}
+                </div>
               </div>
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3">
-                <div className="text-white/80 text-xs">Projets</div>
-                <div className="text-white font-bold text-lg">
+              <div className="bg-slate-900/90 border border-slate-800 p-3">
+                <div className="text-[9px] uppercase tracking-[0.2em] text-slate-400">
+                  Études
+                </div>
+                <div className="text-white font-serif font-bold text-base mt-0.5">
                   {stats.projects}
                 </div>
-                <div className="text-blue-300 text-xs">En cours</div>
+                <div className="text-amber-500 text-[10px] uppercase tracking-wider mt-0.5">
+                  En cours
+                </div>
               </div>
             </motion.div>
           )}
         </AnimatePresence>
-
-        {/* Decorative elements */}
-        <div className="absolute -right-8 -top-8 w-32 h-32 bg-white/10 rounded-full"></div>
-        <div className="absolute -right-4 -bottom-4 w-24 h-24 bg-white/5 rounded-full"></div>
       </div>
 
-      {/* Navigation */}
-      <div className="flex-1 overflow-y-auto py-4 px-3 space-y-2">
-        {/* Retour site principal */}
-        <motion.a
-          href="/"
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          className={`flex items-center p-3 mb-4 text-white bg-gradient-to-r from-emerald-600 to-emerald-700 rounded-xl hover:from-emerald-500 hover:to-emerald-600 transition-all duration-200 shadow-lg hover:shadow-xl ${
-            isCollapsed ? 'justify-center' : ''
+      {/* Navigation principale */}
+      <div className="flex-1 overflow-y-auto py-5 px-3 space-y-1.5 relative z-10">
+        {/* Retour site vitrine */}
+        <Link
+          to="/"
+          className={`flex items-center py-3 px-3.5 mb-5 bg-slate-950 border border-slate-800 hover:border-amber-600 text-slate-300 hover:text-amber-500 text-[11px] uppercase tracking-[0.2em] font-semibold transition-all duration-300 ${
+            isCollapsed ? 'justify-center' : 'justify-center gap-2.5'
           }`}
+          title="Retour au site vitrine"
         >
-          <span className="text-xl">🏠</span>
-          <AnimatePresence>
-            {!isCollapsed && (
-              <motion.div
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -10 }}
-                className="ml-3"
-              >
-                <div className="font-semibold">Site Principal</div>
-                <div className="text-emerald-100 text-xs">Retour au site</div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </motion.a>
+          <FaArrowLeft size={11} />
+          {!isCollapsed && <span>Site Vitrine</span>}
+        </Link>
 
-        {/* Menu Items */}
-        {menuItems.map((item, _index) => (
-          <div key={item.id}>
-            {/* Menu item principal */}
-            <motion.div
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className={`group relative overflow-hidden rounded-xl cursor-pointer ${
-                isCollapsed ? 'mx-auto w-12' : ''
-              }`}
-              onClick={() =>
-                item.submenu
-                  ? handleSubmenuToggle(item.id)
-                  : navigate(item.path)
-              }
-            >
-              <div
-                className={`absolute inset-0 bg-gradient-to-r ${item.color} opacity-0 group-hover:opacity-100 transition-opacity duration-300`}
-              ></div>
+        {/* Liste des rubriques */}
+        {menuItems.map((item) => {
+          const IconComponent = item.icon;
+          const hasSubmenu = Boolean(item.submenu);
+          const isSubmenuOpen = activeSubmenu === item.id;
 
-              <div
-                className={`relative p-3 bg-slate-800/50 group-hover:bg-transparent border border-slate-700/50 group-hover:border-transparent transition-all duration-300 ${
-                  isCollapsed
-                    ? 'flex justify-center'
-                    : 'flex items-center justify-between'
-                }`}
+          if (!hasSubmenu) {
+            return (
+              <NavLink
+                key={item.id}
+                to={item.path}
+                end={item.path === '/dashboard'}
+                title={isCollapsed ? item.label : undefined}
+                className={({ isActive }) =>
+                  `group flex items-center justify-between px-3.5 py-3 text-xs uppercase tracking-[0.16em] border-l-2 transition-all duration-300 ${
+                    isActive
+                      ? 'bg-slate-950 text-amber-500 font-bold border-amber-500'
+                      : 'text-slate-400 hover:text-white hover:bg-slate-950/60 border-transparent'
+                  } ${isCollapsed ? 'justify-center px-0' : ''}`
+                }
               >
-                <div
-                  className={`flex items-center ${
-                    isCollapsed ? '' : 'space-x-3'
-                  }`}
-                >
-                  <span className="text-2xl group-hover:scale-110 transition-transform duration-200">
-                    {item.icon}
+                <div className={`flex items-center ${isCollapsed ? 'justify-center' : 'gap-3.5'}`}>
+                  <IconComponent
+                    size={15}
+                    className="text-amber-500/80 group-hover:text-amber-500 flex-shrink-0"
+                  />
+                  {!isCollapsed && <span>{item.label}</span>}
+                </div>
+
+                {!isCollapsed && item.badge && (
+                  <span className="text-[9px] font-mono uppercase tracking-wider px-2 py-0.5 bg-slate-950 border border-slate-800 text-amber-500">
+                    {item.badge}
                   </span>
+                )}
+              </NavLink>
+            );
+          }
 
-                  <AnimatePresence>
-                    {!isCollapsed && (
-                      <motion.div
-                        initial={{ opacity: 0, x: -10 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: -10 }}
-                      >
-                        <div className="text-white font-medium group-hover:text-white">
-                          {item.label}
-                        </div>
-                        {item.description && (
-                          <div className="text-slate-400 text-xs group-hover:text-white/80">
-                            {item.description}
-                          </div>
-                        )}
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
+          return (
+            <div key={item.id} className="space-y-1">
+              <button
+                type="button"
+                onClick={() => handleSubmenuToggle(item.id)}
+                title={isCollapsed ? item.label : undefined}
+                className={`w-full group flex items-center justify-between px-3.5 py-3 text-xs uppercase tracking-[0.16em] border-l-2 transition-all duration-300 cursor-pointer ${
+                  isSubmenuOpen
+                    ? 'bg-slate-950/80 text-white font-semibold border-amber-600/60'
+                    : 'text-slate-400 hover:text-white hover:bg-slate-950/50 border-transparent'
+                } ${isCollapsed ? 'justify-center px-0' : ''}`}
+              >
+                <div className={`flex items-center ${isCollapsed ? 'justify-center' : 'gap-3.5'}`}>
+                  <IconComponent
+                    size={15}
+                    className="text-amber-500/80 group-hover:text-amber-500 flex-shrink-0"
+                  />
+                  {!isCollapsed && <span>{item.label}</span>}
                 </div>
 
-                <AnimatePresence>
-                  {!isCollapsed && (
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      className="flex items-center space-x-2"
-                    >
-                      {item.badge && (
-                        <span
-                          className={`px-2 py-1 text-xs rounded-full font-semibold ${
-                            item.badge === 'new'
-                              ? 'bg-green-500 text-white'
-                              : 'bg-blue-500 text-white'
-                          }`}
-                        >
-                          {item.badge}
-                        </span>
-                      )}
+                {!isCollapsed && (
+                  <FaChevronDown
+                    size={10}
+                    className={`text-slate-500 transition-transform duration-300 ${
+                      isSubmenuOpen ? 'rotate-180 text-amber-500' : ''
+                    }`}
+                  />
+                )}
+              </button>
 
-                      {item.submenu && (
-                        <motion.div
-                          animate={{
-                            rotate: activeSubmenu === item.id ? 180 : 0,
-                          }}
-                          transition={{ duration: 0.2 }}
-                          className="text-slate-400 group-hover:text-white"
+              {/* Sous-menu dépliant */}
+              <AnimatePresence>
+                {!isCollapsed && isSubmenuOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.25 }}
+                    className="overflow-hidden pl-4 space-y-1 border-l border-slate-800 ml-5"
+                  >
+                    {item.submenu.map((sub) => {
+                      const SubIcon = sub.icon;
+                      return (
+                        <NavLink
+                          key={sub.path}
+                          to={sub.path}
+                          className={({ isActive }) =>
+                            `flex items-center justify-between px-3 py-2.5 text-[11px] uppercase tracking-[0.15em] transition-colors ${
+                              isActive
+                                ? 'text-amber-500 font-bold bg-slate-950/70'
+                                : 'text-slate-400 hover:text-white hover:bg-slate-950/40'
+                            }`
+                          }
                         >
-                          <svg
-                            className="w-5 h-5"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M19 9l-7 7-7-7"
-                            />
-                          </svg>
-                        </motion.div>
-                      )}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            </motion.div>
+                          <div className="flex items-center gap-2.5">
+                            <SubIcon size={12} className="text-slate-500" />
+                            <span>{sub.label}</span>
+                          </div>
 
-            {/* Submenu */}
-            <AnimatePresence>
-              {item.submenu && activeSubmenu === item.id && !isCollapsed && (
-                <motion.div
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: 'auto', opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="overflow-hidden ml-4 mt-2 space-y-1"
-                >
-                  {item.submenu.map((subItem, subIndex) => (
-                    <NavLink
-                      key={subIndex}
-                      to={subItem.path}
-                      className={({ isActive }) =>
-                        `flex items-center justify-between p-3 rounded-lg transition-all duration-200 transform hover:scale-105 ${
-                          isActive
-                            ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg'
-                            : 'bg-slate-800/30 text-slate-300 hover:bg-slate-700/50 hover:text-white'
-                        }`
-                      }
-                    >
-                      <div className="flex items-center space-x-3">
-                        <span className="text-lg">{subItem.icon}</span>
-                        <div>
-                          <div className="font-medium">{subItem.label}</div>
-                          {subItem.desc && (
-                            <div className="text-xs opacity-75">
-                              {subItem.desc}
-                            </div>
+                          {sub.amount && (
+                            <span className="text-[10px] font-mono text-emerald-400">
+                              {sub.amount}
+                            </span>
                           )}
-                        </div>
-                      </div>
 
-                      <div className="flex items-center space-x-2">
-                        {subItem.count && (
-                          <span
-                            className={`px-2 py-1 text-xs rounded-full font-semibold ${
-                              subItem.urgent
-                                ? 'bg-red-500 text-white animate-pulse'
-                                : 'bg-blue-500/20 text-blue-300'
-                            }`}
-                          >
-                            {subItem.count}
-                          </span>
-                        )}
-
-                        {subItem.amount && (
-                          <span className="text-green-400 font-semibold text-sm">
-                            {subItem.amount}
-                          </span>
-                        )}
-
-                        {subItem.trend && (
-                          <span
-                            className={`text-xs ${
-                              subItem.trend === 'up'
-                                ? 'text-green-400'
-                                : subItem.trend === 'down'
-                                ? 'text-red-400'
-                                : 'text-slate-400'
-                            }`}
-                          >
-                            {subItem.trend === 'up'
-                              ? '↗'
-                              : subItem.trend === 'down'
-                              ? '↘'
-                              : '→'}
-                          </span>
-                        )}
-                      </div>
-                    </NavLink>
-                  ))}
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-        ))}
+                          {sub.count !== undefined && (
+                            <span
+                              className={`text-[10px] font-mono px-1.5 py-0.5 ${
+                                sub.urgent
+                                  ? 'bg-amber-600 text-white font-bold'
+                                  : 'bg-slate-950 text-slate-400 border border-slate-800'
+                              }`}
+                            >
+                              {sub.count}
+                            </span>
+                          )}
+                        </NavLink>
+                      );
+                    })}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          );
+        })}
       </div>
 
-      {/* Footer */}
-      <div className="p-4 border-t border-slate-700/50">
-        {/* Profil */}
-        <AnimatePresence>
-          {!isCollapsed && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 20 }}
-              className="mb-3 p-3 bg-slate-800/50 rounded-xl border border-slate-700/50"
-            >
-              <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full flex items-center justify-center shadow-lg">
-                  <span className="font-semibold text-white">A</span>
-                </div>
-                <div>
-                  <div className="text-white font-medium">Admin</div>
-                  <div className="text-slate-400 text-xs">En ligne</div>
-                </div>
-                <div className="ml-auto w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* Logout Button */}
-        <motion.button
+      {/* Pied de la barre latérale : Déconnexion */}
+      <div className="p-4 bg-slate-950 border-t border-slate-800/80 relative z-10">
+        <button
+          type="button"
           onClick={logout}
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          className={`w-full flex items-center justify-center p-3 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl ${
-            isCollapsed ? 'px-3' : ''
+          title={isCollapsed ? 'Se déconnecter' : undefined}
+          className={`w-full py-3 px-4 text-rose-400 hover:text-white hover:bg-rose-950/60 border border-transparent hover:border-rose-800/60 transition-all duration-300 flex items-center text-xs uppercase tracking-[0.2em] font-semibold cursor-pointer ${
+            isCollapsed ? 'justify-center px-0' : 'gap-3'
           }`}
         >
-          <span className="text-xl">🚪</span>
-          <AnimatePresence>
-            {!isCollapsed && (
-              <motion.span
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -10 }}
-                className="ml-2 font-semibold"
-              >
-                Déconnexion
-              </motion.span>
-            )}
-          </AnimatePresence>
-        </motion.button>
+          <FaSignOutAlt size={14} />
+          {!isCollapsed && <span>Déconnexion</span>}
+        </button>
       </div>
     </motion.aside>
   );

@@ -7,6 +7,7 @@ import { profile1Image } from '../assets/assets.js';
 import { motion, AnimatePresence } from 'framer-motion';
 import AnimatedSection from './AnimatedSection';
 import { useNavigate } from 'react-router-dom';
+import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 
 // --- SECTION SERVICES ---
 const Services = () => (
@@ -46,86 +47,151 @@ export default function Hero() {
   const [elementRef] = useIntersectionObserver();
   const navigate = useNavigate();
 
-  const backgrounds = ['/background10.jpeg', '/background8.jpeg', '/backgroud10.jpeg'];
-  const [bgIndex, setBgIndex] = useState(0);
+  // Slides défilants synchronisés (Images claires + Titres + Descriptions)
+  const slides = [
+    {
+      bg: '/background10.jpeg',
+      kicker: 'CONCEPTION ARCHITECTURALE • DESIGN & URBANISME',
+      title: 'Bâtissez votre Héritage',
+      desc: 'Des structures contemporaines sur-mesure, pensées avec rigueur et élégance par Ibrahim Muswema Lemba.',
+    },
+    {
+      bg: '/background8.jpeg',
+      kicker: 'INGÉNIERIE SPATIALE • MAÎTRISE D’ŒUVRE',
+      title: 'Sublimez vos Espaces',
+      desc: 'De l’esquisse initiale à la livraison du chantier, LEGACY Architects & Co donne vie à vos ambitions.',
+    },
+    {
+      bg: '/backgroud10.jpeg',
+      kicker: 'ARCHITECTURE DURABLE • INNOVATION & ESTHÉTIQUE',
+      title: 'Dessinez le Futur',
+      desc: 'Une approche harmonieuse alliant lumière naturelle, matériaux nobles et performance fonctionnelle.',
+    },
+  ];
 
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  // Défilement automatique toutes les 6 secondes
   useEffect(() => {
     const timer = setInterval(() => {
-      setBgIndex((prev) => (prev + 1) % backgrounds.length);
-    }, 5000);
+      setCurrentSlide((prev) => (prev + 1) % slides.length);
+    }, 6000);
     return () => clearInterval(timer);
-  }, [backgrounds.length]);
+  }, [slides.length]);
+
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % slides.length);
+  };
+
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
+  };
 
   return (
     <>
       <section
         ref={elementRef}
         id="home"
-        className="relative min-h-screen flex flex-col justify-center items-center text-center px-6 overflow-hidden bg-slate-950"
+        className="relative min-h-screen flex flex-col justify-center items-center text-center py-20 px-6 overflow-hidden bg-slate-900"
       >
-        {/* Background avec Parallaxe doux */}
+        {/* Background avec Parallaxe doux et luminosité claire */}
         <AnimatePresence mode="wait">
           <motion.div
-            key={bgIndex}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
+            key={currentSlide}
+            initial={{ opacity: 0, scale: 1.03 }}
+            animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 1.5 }}
+            transition={{ duration: 1.2 }}
             className="absolute inset-0 w-full h-full"
             style={{
-              backgroundImage: `url(${backgrounds[bgIndex]})`,
+              backgroundImage: `url(${slides[currentSlide].bg})`,
               backgroundSize: 'cover',
               backgroundPosition: 'center',
-              filter: 'brightness(0.25) grayscale(20%)',
+              filter: 'brightness(0.65) contrast(108%)',
               transform: `translateY(${scrollY * 0.3}px)`,
             }}
           />
         </AnimatePresence>
 
-        {/* Overlay dégradé professionnel */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-transparent to-slate-950 z-10" />
+        {/* Overlay léger pour garder l'image claire tout en assurant la lisibilité du texte */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/65 via-black/25 to-slate-950/90 z-10" />
 
-        <div className="relative z-20 max-w-5xl">
-          {/* Identité visuelle - Cercle Architectural */}
+        {/* Flèches de navigation latérales (Style épuré comme sur l'exemple) */}
+        <button
+          onClick={prevSlide}
+          aria-label="Diapositive précédente"
+          className="absolute left-4 md:left-10 top-1/2 -translate-y-1/2 z-30 p-3 text-white/60 hover:text-white transition-colors"
+        >
+          <FaChevronLeft className="text-2xl md:text-3xl" />
+        </button>
+
+        <button
+          onClick={nextSlide}
+          aria-label="Diapositive suivante"
+          className="absolute right-4 md:right-10 top-1/2 -translate-y-1/2 z-30 p-3 text-white/60 hover:text-white transition-colors"
+        >
+          <FaChevronRight className="text-2xl md:text-3xl" />
+        </button>
+
+        <div className="relative z-20 max-w-4xl mx-auto w-full">
+          {/* En-tête Identité Architecte Principal */}
+          <AnimatedSection variant="slideUp" delay={0.1}>
+            <div className="mb-6">
+              <p className="text-xs md:text-sm tracking-[0.28em] uppercase text-white font-semibold">
+                IBRAHIM <span className="text-amber-400 font-normal">MUSWEMA LEMBA</span>
+              </p>
+              <p className="text-[10px] md:text-xs tracking-[0.25em] uppercase text-slate-200/85 mt-1 font-light">
+                ARCHITECTE PRINCIPAL & ASSOCIÉ • LEGACY ARCHITECTS & CO
+              </p>
+            </div>
+          </AnimatedSection>
+
+          {/* Identité visuelle - Cercle Architectural lumineux */}
           <AnimatedSection variant="scaleIn" delay={0.2}>
-            <div className="mb-10 flex justify-center">
+            <div className="mb-8 flex justify-center">
               <div className="relative group">
                 <LazyImage
                   src={profile1Image}
-                  alt="Ibrahim Muswema"
-                  className="w-40 h-40 md:w-56 md:h-56 rounded-full object-cover grayscale hover:grayscale-0 transition-all duration-700 border-2 border-slate-700 shadow-2xl"
-                  style={{ objectPosition: 'center 10%' }}
+                  alt="Ibrahim Muswema Lemba"
+                  className="w-36 h-36 md:w-48 md:h-48 rounded-full object-cover transition-all duration-700 border-2 border-amber-400/70 shadow-2xl"
+                  style={{ objectPosition: 'center 15%' }}
                 />
                 <motion.div 
                   animate={{ rotate: 360 }}
                   transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
-                  className="absolute -inset-4 border-t-2 border-l-2 border-slate-500/30 rounded-full pointer-events-none"
+                  className="absolute -inset-3 border-t-2 border-l-2 border-amber-400/40 rounded-full pointer-events-none"
                 />
               </div>
             </div>
           </AnimatedSection>
 
-          {/* Titre & Hiérarchie */}
-          <AnimatedSection variant="slideUp" delay={0.4}>
-            <h2 className="text-sm md:text-lg tracking-[0.3em] uppercase mb-4 text-slate-400 font-light">
-              Architecte Principal & Entrepreneur
-            </h2>
-            
-            <h1 className="text-4xl md:text-7xl font-serif font-bold mb-6 text-white leading-tight">
-              Ibrahim <span className="text-slate-500">Muswema</span>
-            </h1>
+          {/* Contenu Défilant : Sur-titre, Titre et Description */}
+          <div className="min-h-[190px] md:min-h-[210px] flex flex-col justify-center">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currentSlide}
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -15 }}
+                transition={{ duration: 0.5 }}
+              >
+                <span className="block text-[11px] md:text-xs tracking-[0.25em] uppercase text-amber-300 font-semibold mb-3">
+                  {slides[currentSlide].kicker}
+                </span>
 
-            <p className="text-lg md:text-xl text-slate-300 max-w-2xl mx-auto mb-10 font-light italic leading-relaxed">
-              "Bâtir l'héritage de demain à travers une architecture de précision."
-              <br />
-              <span className="text-sm font-semibold not-italic text-white tracking-widest uppercase mt-2 block">
-                LEGACY Architects & Co
-              </span>
-            </p>
-          </AnimatedSection>
+                <h1 className="text-4xl md:text-6xl font-serif font-bold mb-5 text-white leading-tight drop-shadow-md">
+                  {slides[currentSlide].title}
+                </h1>
 
-          {/* Call to Actions */}
-          <AnimatedSection variant="slideUp" delay={0.8}>
+                <p className="text-base md:text-lg text-slate-100 max-w-2xl mx-auto mb-8 font-light leading-relaxed drop-shadow">
+                  {slides[currentSlide].desc}
+                </p>
+              </motion.div>
+            </AnimatePresence>
+          </div>
+
+          {/* Call to Actions (Structure et design strictement conservés) */}
+          <AnimatedSection variant="slideUp" delay={0.6}>
             <div className="flex flex-col sm:flex-row gap-6 justify-center">
               <button
                 onClick={() => navigate('/projects')}
@@ -144,15 +210,24 @@ export default function Hero() {
           </AnimatedSection>
         </div>
 
-        {/* Indicateur de scroll */}
-        <motion.div 
-          animate={{ y: [0, 10, 0] }}
-          transition={{ repeat: Infinity, duration: 2 }}
-          className="absolute bottom-10 z-20 w-px h-12 bg-gradient-to-b from-white to-transparent"
-        />
+        {/* Indicateurs de pagination défilants en bas (comme sur l'image de référence) */}
+        <div className="absolute bottom-8 z-30 flex items-center gap-3">
+          {slides.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentSlide(index)}
+              aria-label={`Aller à la diapositive ${index + 1}`}
+              className={`h-1.5 transition-all duration-300 ${
+                currentSlide === index
+                  ? 'w-8 bg-amber-400'
+                  : 'w-2 bg-white/50 hover:bg-white/80'
+              }`}
+            />
+          ))}
+        </div>
       </section>
 
-      {/* Ajout des sections spécifiques demandées */}
+      {/* Sections Services et Quote */}
       <Services />
       <Quote />
     </>

@@ -43,7 +43,7 @@ export default function Contact() {
     } catch (err) {
       notificationService.dismiss(loadingToast);
       notificationService.error('Erreur technique. Ouverture du client mail...');
-      window.location.href = `mailto:ingebalouiscar@://gmail.com Architecture&body=${formData.message}`;
+      window.location.href = `mailto:ibmuswema@://gmail.com Architecture&body=${formData.message}`;
     }
   };
 

@@ -1,4 +1,16 @@
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, Link, useNavigate } from 'react-router-dom';
+import {
+  FaArrowLeft,
+  FaCompass,
+  FaUsers,
+  FaEnvelopeOpenText,
+  FaDraftingCompass,
+  FaChartLine,
+  FaCreditCard,
+  FaComments,
+  FaUserTie,
+  FaSignOutAlt,
+} from 'react-icons/fa';
 import authService from '../services/authService';
 import NotificationBell from './NotificationBell';
 import MessageNotificationBell from './MessageNotificationBell';
@@ -17,163 +29,180 @@ export default function Sidebar({ isMobile = false, onClose = () => {} }) {
   };
 
   const navLinkClass = ({ isActive }) => `
-    px-3 py-2 rounded-lg transition-colors flex items-center gap-2 ${
+    group px-4 py-3 text-xs uppercase tracking-[0.18em] transition-all duration-300 flex items-center justify-between border-l-2 ${
       isMobile ? 'mb-1' : ''
     } ${
-    isActive
-      ? 'text-indigo-600 font-semibold bg-indigo-50'
-      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-  }
+      isActive
+        ? 'bg-slate-950 text-amber-500 font-bold border-amber-500 shadow-inner'
+        : 'text-slate-400 hover:text-white hover:bg-slate-950/60 border-transparent'
+    }
   `;
 
   return (
     <aside
       className={`
-      ${isMobile ? 'w-full h-full p-4' : 'w-64 min-h-screen p-4'} 
-      bg-gray-50 border-r border-gray-200
-    `}
+        ${isMobile ? 'w-full h-full p-6 pt-12' : 'w-68 min-h-screen p-6'} 
+        bg-slate-900 border-r border-slate-800/80 flex flex-col justify-between text-slate-100
+      `}
     >
-      {/* Header */}
-      <div className="mb-6">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="h-10 w-10 lg:h-12 lg:w-12 rounded-full bg-indigo-600 flex items-center justify-center">
-              <span className="text-white font-bold text-sm lg:text-base">
-                A
-              </span>
+      <div>
+        {/* En-tête de l'agence */}
+        <div className="mb-8 pb-6 border-b border-slate-800/80">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3.5">
+              <div className="h-10 w-10 border border-amber-600/50 bg-slate-950 flex items-center justify-center flex-shrink-0">
+                <span className="text-amber-500 font-serif font-bold text-sm tracking-wider">
+                  IM
+                </span>
+              </div>
+              <div>
+                <span className="text-[9px] tracking-[0.3em] uppercase text-amber-500 font-bold block">
+                  APA IBRAMUS
+                </span>
+                <span className="text-white font-serif font-bold text-base tracking-wide">
+                  Direction
+                </span>
+              </div>
             </div>
-            <div className="text-gray-900 font-bold text-sm lg:text-base">
-              Admin Dashboard
-            </div>
+            {!isMobile && <NotificationBell />}
           </div>
-          {!isMobile && <NotificationBell />}
         </div>
-      </div>
 
-      {/* Navigation */}
-      <nav className="flex flex-col gap-1">
-        {/* Retour site principal */}
-        <a
-          href="/"
+        {/* Bouton retour vers le site vitrine */}
+        <Link
+          to="/"
           onClick={handleNavClick}
-          className="mb-4 px-3 py-2 bg-indigo-600 text-white text-center text-sm lg:text-base rounded-lg hover:bg-indigo-700 transition-colors flex items-center justify-center gap-2"
+          className="mb-8 w-full px-4 py-3 bg-slate-950 border border-slate-800 hover:border-amber-600 text-slate-300 hover:text-amber-500 text-[11px] uppercase tracking-[0.2em] font-semibold transition-all duration-300 flex items-center justify-center gap-2.5"
           title="Retour au site principal"
         >
-          <svg
-            className="w-4 h-4"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
+          <FaArrowLeft size={11} />
+          <span>Site Vitrine</span>
+        </Link>
+
+        {/* Libellé de section */}
+        <span className="text-[9px] tracking-[0.35em] uppercase text-slate-500 font-bold block mb-3 px-2">
+          Gestion & Pilotage
+        </span>
+
+        {/* Navigation principale */}
+        <nav className="flex flex-col gap-1">
+          <NavLink
+            to="/dashboard"
+            end
+            className={navLinkClass}
+            onClick={handleNavClick}
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M10 19l-7-7m0 0l7-7m-7 7h18"
-            />
-          </svg>
-          Site Principal
-        </a>
+            <div className="flex items-center gap-3">
+              <FaCompass size={14} className="text-amber-500/80 group-hover:text-amber-500" />
+              <span>Dashboard</span>
+            </div>
+          </NavLink>
 
-        {/* Menu items */}
-        <NavLink
-          to="/dashboard"
-          end
-          className={navLinkClass}
-          onClick={handleNavClick}
-        >
-          <span className="text-lg">📊</span>
-          <span className="text-sm lg:text-base">Dashboard</span>
-        </NavLink>
+          <NavLink
+            to="/dashboard/clients"
+            className={navLinkClass}
+            onClick={handleNavClick}
+          >
+            <div className="flex items-center gap-3">
+              <FaUsers size={14} className="text-amber-500/80 group-hover:text-amber-500" />
+              <span>Clients</span>
+            </div>
+          </NavLink>
 
-        <NavLink
-          to="/dashboard/clients"
-          className={navLinkClass}
-          onClick={handleNavClick}
-        >
-          <span className="text-lg">👥</span>
-          <span className="text-sm lg:text-base">Clients</span>
-        </NavLink>
+          <NavLink
+            to="/dashboard/subscribers"
+            className={navLinkClass}
+            onClick={handleNavClick}
+          >
+            <div className="flex items-center gap-3">
+              <FaEnvelopeOpenText size={14} className="text-amber-500/80 group-hover:text-amber-500" />
+              <span>Abonnés</span>
+            </div>
+          </NavLink>
 
-        <NavLink
-          to="/dashboard/subscribers"
-          className={navLinkClass}
-          onClick={handleNavClick}
-        >
-          <span className="text-lg">📧</span>
-          <span className="text-sm lg:text-base">Abonnés</span>
-        </NavLink>
+          <NavLink
+            to="/dashboard/projects"
+            className={navLinkClass}
+            onClick={handleNavClick}
+          >
+            <div className="flex items-center gap-3">
+              <FaDraftingCompass size={14} className="text-amber-500/80 group-hover:text-amber-500" />
+              <span>Projets</span>
+            </div>
+          </NavLink>
 
-        <NavLink
-          to="/dashboard/projects"
-          className={navLinkClass}
-          onClick={handleNavClick}
-        >
-          <span className="text-lg">📋</span>
-          <span className="text-sm lg:text-base">Projets</span>
-        </NavLink>
+          <NavLink
+            to="/dashboard/analytics"
+            className={navLinkClass}
+            onClick={handleNavClick}
+          >
+            <div className="flex items-center gap-3">
+              <FaChartLine size={14} className="text-amber-500/80 group-hover:text-amber-500" />
+              <span>Analytics</span>
+            </div>
+          </NavLink>
 
-        <NavLink
-          to="/dashboard/analytics"
-          className={navLinkClass}
-          onClick={handleNavClick}
-        >
-          <span className="text-lg">📈</span>
-          <span className="text-sm lg:text-base">Analytics</span>
-        </NavLink>
+          <NavLink
+            to="/dashboard/payments"
+            className={navLinkClass}
+            onClick={handleNavClick}
+          >
+            <div className="flex items-center gap-3">
+              <FaCreditCard size={14} className="text-amber-500/80 group-hover:text-amber-500" />
+              <span>Paiements</span>
+            </div>
+          </NavLink>
 
-        <NavLink
-          to="/dashboard/payments"
-          className={navLinkClass}
-          onClick={handleNavClick}
-        >
-          <span className="text-lg">💳</span>
-          <span className="text-sm lg:text-base">Paiements</span>
-        </NavLink>
-
-        <NavLink
-          to="/dashboard/messaging"
-          className={navLinkClass}
-          onClick={handleNavClick}
-        >
-          <div className="flex items-center gap-2">
-            <span className="text-lg">💬</span>
-            <span className="text-sm lg:text-base">Messages</span>
+          <NavLink
+            to="/dashboard/messaging"
+            className={navLinkClass}
+            onClick={handleNavClick}
+          >
+            <div className="flex items-center gap-3">
+              <FaComments size={14} className="text-amber-500/80 group-hover:text-amber-500" />
+              <span>Messages</span>
+            </div>
             {!isMobile && <MessageNotificationBell />}
-          </div>
-        </NavLink>
+          </NavLink>
 
-        <NavLink
-          to="/dashboard/profile"
-          className={navLinkClass}
-          onClick={handleNavClick}
-        >
-          <span className="text-lg">👤</span>
-          <span className="text-sm lg:text-base">Mon Profil</span>
-        </NavLink>
+          <NavLink
+            to="/dashboard/profile"
+            className={navLinkClass}
+            onClick={handleNavClick}
+          >
+            <div className="flex items-center gap-3">
+              <FaUserTie size={14} className="text-amber-500/80 group-hover:text-amber-500" />
+              <span>Mon Profil</span>
+            </div>
+          </NavLink>
+        </nav>
+      </div>
 
-        {/* Logout */}
-        <button
-          onClick={logout}
-          className="mt-6 px-3 py-2 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors flex items-center gap-2 text-sm lg:text-base"
-        >
-          <span className="text-lg">🚪</span>
-          Se déconnecter
-        </button>
-      </nav>
-
-      {/* Mobile notifications */}
-      {isMobile && (
-        <div className="mt-6 pt-4 border-t border-gray-200">
-          <div className="flex items-center justify-between">
-            <span className="text-sm text-gray-600">Notifications</span>
-            <div className="flex gap-2">
+      {/* Pied de la barre latérale */}
+      <div className="pt-6 mt-6 border-t border-slate-800/80">
+        {/* Notifications sur mobile */}
+        {isMobile && (
+          <div className="mb-4 pb-4 border-b border-slate-800/80 flex items-center justify-between px-2">
+            <span className="text-[10px] uppercase tracking-[0.2em] text-slate-400 font-semibold">
+              Alertes & Messages
+            </span>
+            <div className="flex items-center gap-3">
               <NotificationBell />
               <MessageNotificationBell />
             </div>
           </div>
-        </div>
-      )}
+        )}
+
+        {/* Bouton de déconnexion */}
+        <button
+          type="button"
+          onClick={logout}
+          className="w-full px-4 py-3 text-rose-400 hover:text-white hover:bg-rose-950/60 border border-transparent hover:border-rose-800/60 transition-all duration-300 flex items-center gap-3 text-xs uppercase tracking-[0.2em] font-semibold cursor-pointer"
+        >
+          <FaSignOutAlt size={14} />
+          <span>Se déconnecter</span>
+        </button>
+      </div>
     </aside>
   );
 }

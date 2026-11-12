@@ -12,8 +12,8 @@ export const bgImage = '/images/background.jpeg';
 export const programmationImage = '/images/image.programmation2.jpg';
 export const logoImages = '/images/logoibra.jpeg';
 
-export const about =
-  "Expert en relations publiques doté d'une solide expertise en maintenance système, j'assure la synergie entre la performance technique de nos outils et le rayonnement de notre agence. Mon rôle : garantir que nos systèmes ne tombent jamais et que nos partenariats ne cessent de croître.";
+export const about = 
+  "Architecte Principal & Associé chez Legacy Architects, je fusionne vision créative et rigueur technique pour bâtir des projets d'exception. Mon rôle : piloter la conception architecturale tout en garantissant une exécution fluide sur le terrain, assurant ainsi la pérennité de notre signature et la force de nos engagements bâtis.";
 
 export const skills = [
   'Négociation',

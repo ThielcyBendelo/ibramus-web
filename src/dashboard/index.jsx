@@ -9,5 +9,4 @@ export { default as Analytics } from './pages/Analytics.jsx';
 export { default as Projects } from './pages/Projects.jsx';
 export { default as Messaging } from './pages/Messaging.jsx';
 export { default as Profile } from './pages/Profile.jsx';
-export { default as Sidebar } from './components/Sidebar.jsx';
 export { default as ProtectedRoute } from './components/ProtectedRoute.jsx';

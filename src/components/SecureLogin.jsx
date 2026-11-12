@@ -1,5 +1,15 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import {
+  FaLock,
+  FaEnvelope,
+  FaKey,
+  FaEye,
+  FaEyeSlash,
+  FaArrowRight,
+  FaArrowLeft,
+  FaExclamationCircle,
+} from 'react-icons/fa';
 import useFormSecurity from '../hooks/useFormSecurity';
 import authService from '../services/authService';
 
@@ -24,7 +34,6 @@ const SecureLogin = () => {
   } = useFormSecurity(formSchema, async (data) => {
     try {
       setApiError('');
-      // Utiliser le service mock pour le login
       const resp = await authService.login(data.email, data.password);
       if (resp?.user?.role === 'admin') {
         navigate('/dashboard');
@@ -43,163 +52,178 @@ const SecureLogin = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-dark-200 to-dark-300 px-4">
-      <div className="w-full max-w-md bg-dark-300/80 backdrop-blur-sm p-8 rounded-2xl shadow-2xl border border-gray-700/50">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-12 h-12 bg-gradient-to-r from-purple to-pink rounded-lg mb-4">
-            <span className="text-white text-xl font-bold">🔐</span>
+    <div className="min-h-screen flex items-center justify-center bg-slate-950 px-4 py-12 relative">
+      {/* Retour vers le site */}
+      <button
+        type="button"
+        onClick={() => navigate('/')}
+        className="absolute top-8 left-8 flex items-center gap-2 text-[11px] uppercase tracking-[0.2em] text-slate-400 hover:text-amber-500 transition-colors cursor-pointer"
+      >
+        <FaArrowLeft size={11} />
+        <span>Retour à l'agence</span>
+      </button>
+
+      <div className="w-full max-w-md bg-slate-900/90 backdrop-blur-md p-8 md:p-12 border border-slate-800 border-t-4 border-t-amber-600 shadow-2xl">
+        {/* En-tête éditorial */}
+        <div className="text-center mb-10">
+          <div className="inline-flex items-center justify-center w-12 h-12 border border-amber-600/40 bg-slate-950 text-amber-500 mb-5">
+            <FaLock size={16} />
           </div>
-          <h1 className="text-3xl font-bold text-white mb-2">Connexion Sécurisée</h1>
-          <p className="text-gray-400">Accédez à votre tableau de bord</p>
+          <span className="text-[10px] tracking-[0.35em] uppercase text-amber-500 font-bold block mb-2">
+            APA IBRAMUS — Portail Privé
+          </span>
+          <h1 className="text-3xl font-serif font-bold text-white mb-2">
+            Espace Client
+          </h1>
+          <div className="w-10 h-px bg-amber-600 mx-auto my-4"></div>
+          <p className="text-xs text-slate-400 tracking-wide">
+            Suivi de chantier, plans techniques et documents de projet
+          </p>
         </div>
 
-        {/* API Error */}
+        {/* Erreur API */}
         {apiError && (
-          <div className="mb-6 p-4 bg-red-500/10 border border-red-500/30 rounded-lg">
-            <p className="text-red-300 text-sm">🚨 {apiError}</p>
+          <div className="mb-6 p-4 bg-rose-950/50 border-l-2 border-rose-500 flex items-center gap-3">
+            <FaExclamationCircle className="text-rose-400 flex-shrink-0" size={15} />
+            <p className="text-rose-200 text-xs">{apiError}</p>
           </div>
         )}
 
-        {/* Form */}
-        <form onSubmit={handleSubmit} noValidate className="space-y-5">
-          {/* Email Field */}
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">
-              Email
+        {/* Formulaire */}
+        <form onSubmit={handleSubmit} noValidate className="space-y-6">
+          {/* Champ Email */}
+          <div className="group">
+            <label
+              htmlFor="email"
+              className="block text-[11px] uppercase tracking-[0.2em] font-bold text-slate-300 mb-2"
+            >
+              Adresse Email <span className="text-amber-500">*</span>
             </label>
-            <div className="relative">
+            <div className="relative flex items-center">
+              <span
+                className={`absolute left-4 transition-colors duration-300 ${
+                  touched.email && errors.email
+                    ? 'text-rose-400'
+                    : 'text-slate-500 group-focus-within:text-amber-500'
+                }`}
+              >
+                <FaEnvelope size={14} />
+              </span>
               <input
                 id="email"
                 name="email"
                 type="email"
-                placeholder="bendelothielcy@gmail.com"
+                placeholder="client@domaine.com"
                 value={formData.email || ''}
                 onChange={handleChange}
                 onBlur={handleBlur}
                 disabled={isLoading}
-                className={`w-full px-4 py-3 bg-dark-100/50 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 transition-all ${
+                className={`w-full pl-11 pr-4 py-3.5 bg-slate-950 border text-sm text-white placeholder-slate-600 focus:outline-none transition-all duration-300 ${
                   touched.email && errors.email
-                    ? 'border-red-500 focus:ring-red-500/50'
-                    : 'border-gray-600/50 focus:ring-purple/50 focus:border-purple/50'
+                    ? 'border-rose-500 focus:border-rose-500'
+                    : 'border-slate-800 focus:border-amber-600'
                 } disabled:opacity-50`}
               />
-              <span className="absolute right-3 top-3 text-gray-500">✉️</span>
             </div>
             {touched.email && errors.email && (
-              <p className="text-red-400 text-xs mt-1">⚠️ {errors.email}</p>
+              <p className="flex items-center gap-1.5 text-rose-400 text-xs mt-2">
+                <FaExclamationCircle size={11} />
+                <span>{errors.email}</span>
+              </p>
             )}
           </div>
 
-          {/* Password Field */}
-          <div>
+          {/* Champ Mot de passe */}
+          <div className="group">
             <div className="flex items-center justify-between mb-2">
-              <label htmlFor="password" className="block text-sm font-medium text-gray-300">
-                Mot de passe
+              <label
+                htmlFor="password"
+                className="block text-[11px] uppercase tracking-[0.2em] font-bold text-slate-300"
+              >
+                Mot de passe <span className="text-amber-500">*</span>
               </label>
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="text-xs text-purple hover:text-pink transition"
+                className="flex items-center gap-1.5 text-[11px] uppercase tracking-wider text-slate-400 hover:text-amber-500 transition-colors cursor-pointer"
               >
-                {showPassword ? '👁️ Masquer' : '👁️ Afficher'}
+                {showPassword ? <FaEyeSlash size={12} /> : <FaEye size={12} />}
+                <span>{showPassword ? 'Masquer' : 'Afficher'}</span>
               </button>
             </div>
-            <div className="relative">
+            <div className="relative flex items-center">
+              <span
+                className={`absolute left-4 transition-colors duration-300 ${
+                  touched.password && errors.password
+                    ? 'text-rose-400'
+                    : 'text-slate-500 group-focus-within:text-amber-500'
+                }`}
+              >
+                <FaKey size={14} />
+              </span>
               <input
                 id="password"
                 name="password"
                 type={showPassword ? 'text' : 'password'}
-                placeholder="bendelo1996$$$$$"
+                placeholder="••••••••••••"
                 value={formData.password || ''}
                 onChange={handleChange}
                 onBlur={handleBlur}
                 disabled={isLoading}
-                className={`w-full px-4 py-3 bg-dark-100/50 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 transition-all ${
+                className={`w-full pl-11 pr-4 py-3.5 bg-slate-950 border text-sm text-white placeholder-slate-600 focus:outline-none transition-all duration-300 ${
                   touched.password && errors.password
-                    ? 'border-red-500 focus:ring-red-500/50'
-                    : 'border-gray-600/50 focus:ring-purple/50 focus:border-purple/50'
+                    ? 'border-rose-500 focus:border-rose-500'
+                    : 'border-slate-800 focus:border-amber-600'
                 } disabled:opacity-50`}
               />
-              <span className="absolute right-3 top-3 text-gray-500">🔒</span>
             </div>
             {touched.password && errors.password && (
-              <p className="text-red-400 text-xs mt-1">⚠️ {errors.password}</p>
+              <p className="flex items-center gap-1.5 text-rose-400 text-xs mt-2">
+                <FaExclamationCircle size={11} />
+                <span>{errors.password}</span>
+              </p>
             )}
           </div>
 
-          {/* Remember Me & Forgot Password */}
-          <div className="flex items-center justify-between text-sm">
-            <label className="flex items-center gap-2 text-gray-400 hover:text-gray-300 cursor-pointer">
+          {/* Options de session */}
+          <div className="flex items-center justify-between text-xs pt-1">
+            <label className="flex items-center gap-2 text-slate-400 hover:text-slate-200 cursor-pointer">
               <input
                 type="checkbox"
-                className="w-4 h-4 rounded border-gray-600 text-purple focus:ring-purple"
+                className="w-3.5 h-3.5 accent-amber-600 bg-slate-950 border-slate-700 cursor-pointer"
               />
-              <span>Se souvenir de moi</span>
+              <span>Maintenir la session</span>
             </label>
             <button
               type="button"
               onClick={() => navigate('/forgot-password')}
-              className="text-purple hover:text-pink transition"
+              className="text-slate-400 hover:text-amber-500 transition-colors cursor-pointer"
             >
               Mot de passe oublié ?
             </button>
           </div>
 
-          {/* Submit Button */}
+          {/* Bouton de connexion */}
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full py-3 px-4 bg-gradient-to-r from-purple to-pink text-white font-semibold rounded-lg transform transition-all hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/40 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full py-4 px-6 bg-amber-600 text-white text-xs uppercase tracking-[0.25em] font-bold hover:bg-amber-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center gap-3 cursor-pointer shadow-lg"
           >
-            {isLoading ? (
-              <span className="flex items-center justify-center gap-2">
-                <span className="animate-spin">⏳</span> Connexion...
-              </span>
-            ) : (
-              '✓ Se connecter'
-            )}
+            <span>{isLoading ? 'Authentification...' : 'Accéder à mon espace'}</span>
+            {!isLoading && <FaArrowRight size={12} />}
           </button>
         </form>
 
-        {/* Security Info */}
-        <div className="mt-6 p-4 bg-blue-500/10 border border-blue-500/30 rounded-lg">
-          <p className="text-blue-300 text-xs leading-relaxed">
-            🔐 <strong>Sécurité:</strong> Cette connexion est protégée par:
-            <br />
-            • Validation des données côté client
-            <br />
-            • Tokens CSRF automatiques
-            <br />
-            • Rate limiting anti-brute force
-            <br />
-            • Chiffrage SSL/TLS en transmission
-          </p>
-        </div>
-
-        {/* Test Credentials */}
-        <div className="mt-4 p-4 bg-amber-500/10 border border-amber-500/30 rounded-lg">
-          <p className="text-amber-300 text-xs leading-relaxed">
-            🧪 <strong>Credentials de test (développement):</strong>
-            <br />
-            <strong>Email:</strong> admin@example.com
-            <br />
-            <strong>Mot de passe:</strong> Admin@12345
-            <br />
-            <em className="text-amber-400">Note: À remplacer par votre backend en production</em>
-          </p>
-        </div>
-
-        {/* Register Link */}
-        <div className="mt-6 text-center">
-          <p className="text-gray-400 text-sm">
-            Pas encore de compte?{' '}
+        {/* Lien d'inscription */}
+        <div className="mt-8 pt-6 border-t border-slate-800 text-center">
+          <p className="text-slate-400 text-xs">
+            Vous êtes un nouveau maître d'ouvrage ?{' '}
             <button
               type="button"
               onClick={() => navigate('/register')}
-              className="text-purple hover:text-pink transition font-semibold"
+              className="text-amber-500 hover:text-amber-400 uppercase tracking-wider font-bold ml-1 transition-colors cursor-pointer"
             >
-              S'inscrire
+              Créer un accès
             </button>
           </p>
         </div>
@@ -209,4 +233,3 @@ const SecureLogin = () => {
 };
 
 export default SecureLogin;
-  
